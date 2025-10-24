@@ -1,26 +1,47 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.InputSystem;
 public class Plane : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
+    [SerializeField] FlappyBirdManager flappyBirdManager;
+    public PlayerInput playerInput;
 
     [SerializeField] float speed;
     [SerializeField] float rotatePower;
     [SerializeField] float jumpPower;
+    [SerializeField] float deadCoolDown;
 
-    private bool isRotate;
     private bool isDead;
     public bool isGodmode;
 
-    private void FixedUpdate()
+    private void Update()
     {
-        MoveForwardPlane();
-        Rotate();
+        if(isDead)
+        {
+            if(deadCoolDown <= 0)
+            {
+                flappyBirdManager.GameOver();
+            }
+            else
+            {
+                deadCoolDown -= Time.deltaTime;
+            }
+        }
     }
 
+
+    private void FixedUpdate()
+    {
+        if(flappyBirdManager.isStart)
+        {
+            MoveForwardPlane();
+            Rotate();
+        }
+    }
     private void MoveForwardPlane()
     {
         Vector2 velocity = rb.velocity;
@@ -36,7 +57,17 @@ public class Plane : MonoBehaviour
         transform.rotation = Quaternion.Euler(0, 0, angle);
     }
 
+    public void InitPlane()
+    {
+        playerInput.enabled = true;
+        rb = this.gameObject.AddComponent<Rigidbody2D>();
+    }
 
+    public void StopPlane()
+    {
+        speed = 0;
+        playerInput.enabled = false;
+    }
 
 
     private void OnCollisionEnter2D(Collision2D collision)
@@ -48,11 +79,14 @@ public class Plane : MonoBehaviour
 
         animator.SetBool("IsDie", true);
         isDead = true;
+        StopPlane();
     }
 
     #region InputSystem
     private void OnJump()
     {
+        if (isDead)
+            return;
         Vector2 velocity = rb.velocity;
         velocity.y += jumpPower;
         rb.velocity = velocity;

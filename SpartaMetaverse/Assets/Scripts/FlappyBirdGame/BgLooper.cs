@@ -38,7 +38,6 @@ public class BgLooper : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log("Ãæµ¹" + collision.name);
         if(collision.CompareTag("BackGround"))
         {
             float widthBgObject = ((BoxCollider2D)collision).size.x;
