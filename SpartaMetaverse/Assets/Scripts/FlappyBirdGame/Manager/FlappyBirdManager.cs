@@ -14,10 +14,11 @@ public class FlappyBirdManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI startCountText;
     public bool isStart;
 
-    [SerializeField] int gameOverWaitCount;
     [SerializeField] GameObject gameOverPopup;
 
     [SerializeField] Plane plane;
+
+    [SerializeField] UiManager uiManager;
 
     private void Start()
     {
@@ -44,6 +45,11 @@ public class FlappyBirdManager : MonoBehaviour
         Rigidbody2D rb = plane.GetComponent<Rigidbody2D>();
     }
 
+    public void GetScore()
+    {
+        currentScore++;
+        uiManager.UpdateScore(currentScore);
+    }
 
     public void RestartGame()
     {

@@ -82,6 +82,16 @@ public class Plane : MonoBehaviour
         StopPlane();
     }
 
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+
+        if(isDead == false && collision.CompareTag("Obstacle"))
+        {
+            Debug.Log("Á¡¼ö");
+            flappyBirdManager.GetScore();
+        }
+    }
+
     #region InputSystem
     private void OnJump()
     {
