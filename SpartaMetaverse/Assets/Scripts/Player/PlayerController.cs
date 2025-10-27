@@ -6,6 +6,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [SerializeField] Rigidbody2D rb;
+    [SerializeField] Animator anim;
 
     [SerializeField] SpriteRenderer characterRenderer;
     [SerializeField] Transform weaponPivot;
@@ -20,15 +21,12 @@ public class PlayerController : MonoBehaviour
 
     Vector2 knockBack = Vector2.zero;
     float knockBackDuration = 0f;
+
+    [SerializeField] float jumpPower;
+    [SerializeField] LayerMask groundLayer;
     void Start()
     {
         camera = Camera.main;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void FixedUpdate()
@@ -38,11 +36,6 @@ public class PlayerController : MonoBehaviour
         {
             knockBackDuration -= Time.fixedDeltaTime;
         }
-    }
-
-    private void LateUpdate()
-    {
-        
     }
 
     void Move(Vector2 dir)
@@ -59,11 +52,18 @@ public class PlayerController : MonoBehaviour
     void OnMove(InputValue inputValue)
     {
         MoveDir = inputValue.Get<Vector2>();
+        bool isRun = MoveDir.sqrMagnitude > 0f;
         MoveDir = MoveDir.normalized;
+        anim.SetBool("IsRun", isRun);
         if (MoveDir.x < 0)
+        {
             characterRenderer.flipX = true;
+        }
         else if (MoveDir.x > 0)
+        {
             characterRenderer.flipX = false;
+        }
+        
     }
 
     void OnLook(InputValue inputValue)
@@ -75,5 +75,19 @@ public class PlayerController : MonoBehaviour
             LookDir = Vector2.zero;
         else
             LookDir = LookDir.normalized;
+    }
+
+    void OnJump(InputValue inputValue)
+    {
+        if(IsGround())
+        {
+            rb.velocity = new Vector2(rb.velocity.x, jumpPower);
+        }
+    }
+
+    bool IsGround()
+    {
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, groundLayer);
+        return (hit.collider != null);
     }
 }
