@@ -2,12 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum InteractionType
-{
-    MiniGame,
-    LeaderBoard
-}
-
 public interface ITriggerable
 {
     public InteractionType Type { get; set; }
