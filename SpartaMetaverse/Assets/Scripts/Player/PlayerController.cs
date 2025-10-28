@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
             LookDir = LookDir.normalized;
     }*/
 
-    void OnJump(InputValue inputValue)
+    /*void OnJump(InputValue inputValue)
     {
         if(IsGround())
         {
@@ -92,5 +92,5 @@ public class PlayerController : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, 0.1f, groundLayer);
         return (hit.collider != null);
-    }
+    }*/
 }

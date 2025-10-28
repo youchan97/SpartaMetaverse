@@ -12,6 +12,8 @@ public class PopupManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI flappyScore;
     GameManager gameManager;
+
+    [SerializeField] TextMeshProUGUI npcText;
     private void Start()
     {
         gameManager = GameManager.Instance;
@@ -27,5 +29,15 @@ public class PopupManager : MonoBehaviour
     {
         if(gameManager.MiniGameScore.ContainsKey(flappyBirdScore))
             flappyScore.text = "최고 점수 :\t" + gameManager.MiniGameScore[flappyBirdScore];
+    }
+
+    private IEnumerator TypeText(string fullText, float delay)
+    {
+        npcText.text = "";
+        foreach (char c in fullText)
+        {
+            npcText.text += c;
+            yield return new WaitForSeconds(delay);
+        }
     }
 }
