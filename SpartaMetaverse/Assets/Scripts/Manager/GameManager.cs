@@ -16,11 +16,6 @@ public class GameManager : SingletonManager<GameManager>
             LoadScore();
     }
 
-    private void OnApplicationQuit()
-    {
-        SaveScore();
-    }
-
     public void UpdateMiniGameHighScore(string miniGame, int score)
     {
         if (MiniGameScore.ContainsKey(miniGame))

@@ -8,6 +8,7 @@ public class Plane : MonoBehaviour
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator animator;
     [SerializeField] FlappyBirdManager flappyBirdManager;
+    [SerializeField] UiManager uiManager;
     public PlayerInput playerInput;
 
     [SerializeField] float speed;
@@ -17,6 +18,8 @@ public class Plane : MonoBehaviour
 
     private bool isDead;
     public bool isGodmode;
+
+    private Vector2 saveVelocity;
 
     private void Update()
     {
@@ -36,7 +39,7 @@ public class Plane : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(flappyBirdManager.isStart)
+        if(flappyBirdManager.isStart && flappyBirdManager.isPause == false)
         {
             MoveForwardPlane();
             Rotate();
@@ -48,7 +51,6 @@ public class Plane : MonoBehaviour
         velocity.x = speed;
         rb.velocity = velocity;
     }
-
 
     private void Rotate()
     {
@@ -69,6 +71,25 @@ public class Plane : MonoBehaviour
         playerInput.enabled = false;
     }
 
+    public void PausePlane()
+    {
+        uiManager.OpenPauseUi(true);
+        flappyBirdManager.isPause = true;
+        if (rb != null)
+        {
+            saveVelocity = rb.velocity;
+            Destroy(rb);
+        }
+        
+    }
+
+    public void ResumePlane()
+    {
+        uiManager.OpenPauseUi(false);
+        flappyBirdManager.isPause = false;
+        rb = this.gameObject.AddComponent<Rigidbody2D>();
+        rb.velocity = saveVelocity;
+    }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -95,11 +116,22 @@ public class Plane : MonoBehaviour
     #region InputSystem
     private void OnJump()
     {
-        if (isDead)
+        if (isDead || flappyBirdManager.isPause)
             return;
         Vector2 velocity = rb.velocity;
         velocity.y += jumpPower;
         rb.velocity = velocity;
+    }
+
+    private void OnPause()
+    {
+        if(flappyBirdManager.isStart)
+        {
+            if (!flappyBirdManager.isPause)
+                PausePlane();
+            else
+                ResumePlane();
+        }
     }
     #endregion
 

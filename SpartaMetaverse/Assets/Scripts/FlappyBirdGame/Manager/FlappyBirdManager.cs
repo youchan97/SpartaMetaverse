@@ -7,34 +7,39 @@ using static ConstInfo;
 
 public class FlappyBirdManager : MonoBehaviour
 {
+    GameManager gameManager;
+
     [SerializeField] int currentScore;
 
     [SerializeField] int countDown;
-    [SerializeField] GameObject startPopup;
     [SerializeField] TextMeshProUGUI startCountText;
     public bool isStart;
-
-    [SerializeField] GameObject gameOverPopup;
 
     [SerializeField] Plane plane;
 
     [SerializeField] UiManager uiManager;
 
+    public bool isPause;
+
+    public int CurrentScore { get { return currentScore; } }
+
     private void Start()
     {
+        gameManager = GameManager.Instance;
+        isPause = false;
         StartCoroutine(StartCountDown());
     }
 
     IEnumerator StartCountDown()
     {
-        startPopup.SetActive(true);
+        uiManager.OpenStartGameUi(true);
         while (countDown >= 0)
         {
             startCountText.text = countDown.ToString();
             yield return new WaitForSeconds(1f);
             countDown--;
         }
-        startPopup.SetActive(false);
+        uiManager.OpenStartGameUi(false);
         isStart = true;
         plane.InitPlane();
         yield return null;
@@ -53,12 +58,15 @@ public class FlappyBirdManager : MonoBehaviour
 
     public void RestartGame()
     {
-        SceneManager.LoadScene(flappyBirdGame);
+        SceneManager.LoadScene(flappyBirdGameScene);
     }
 
     public void GameOver()
     {
-        gameOverPopup.SetActive(true);
+        uiManager.ResultScore();
+        gameManager.UpdateMiniGameHighScore(flappyBirdScore, currentScore);
+        uiManager.OpenGameOverUi(true);
+        gameManager.SaveScore();
     }
 
     public void ExitGame()
