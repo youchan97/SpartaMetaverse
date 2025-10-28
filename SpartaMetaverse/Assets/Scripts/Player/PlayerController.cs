@@ -11,13 +11,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] PopupManager popupManager;
 
     [SerializeField] SpriteRenderer characterRenderer;
-    [SerializeField] Transform weaponPivot;
 
     private Vector2 moveDir = Vector2.zero;
     public Vector2 MoveDir { get { return moveDir; } set { moveDir = value; } }
 
-    private Vector2 lookDir = Vector2.zero;
-    public Vector2 LookDir { get { return lookDir; } set { lookDir = value; } }
+    /*private Vector2 lookDir = Vector2.zero;
+    public Vector2 LookDir { get { return lookDir; } set { lookDir = value; } }*/
 
 
     [SerializeField] float jumpPower;
@@ -69,7 +68,7 @@ public class PlayerController : MonoBehaviour
         }        
     }
 
-    void OnLook(InputValue inputValue)
+    /*void OnLook(InputValue inputValue)
     {
         Vector2 mousePos = inputValue.Get<Vector2>();
         Camera camera = Camera.main;
@@ -79,7 +78,7 @@ public class PlayerController : MonoBehaviour
             LookDir = Vector2.zero;
         else
             LookDir = LookDir.normalized;
-    }
+    }*/
 
     void OnJump(InputValue inputValue)
     {
